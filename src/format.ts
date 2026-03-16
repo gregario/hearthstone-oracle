@@ -4,6 +4,7 @@ import type { GetArchetypeResult } from './tools/get-archetype.js';
 import type { GetClassIdentityResult } from './tools/get-class-identity.js';
 import type { GetMatchupResult } from './tools/get-matchup.js';
 import type { ExplainConceptResult } from './tools/explain-concept.js';
+import type { AnalyzeDeckResult } from './tools/analyze-deck.js';
 
 // --- Types ---
 
@@ -366,5 +367,69 @@ export function formatExplainConcept(result: ExplainConceptResult): string {
   lines.push(c.description);
   lines.push('');
   lines.push(`**In Hearthstone:** ${c.hearthstone_application}`);
+  return lines.join('\n');
+}
+
+// --- analyze_deck formatter ---
+
+export function formatAnalyzeDeck(result: AnalyzeDeckResult): string {
+  if (!result.success) {
+    return result.message;
+  }
+
+  const lines: string[] = [];
+
+  // Header
+  lines.push('# Deck Analysis');
+  lines.push('');
+  lines.push(`**Class:** ${result.deck.hero_class} | **Format:** ${result.deck.format} | **Cards:** ${result.deck.total_cards}`);
+  lines.push('');
+
+  // Archetype classification
+  const confidencePct = Math.round(result.classification.confidence * 100);
+  lines.push(`## Archetype: ${result.classification.archetype.charAt(0).toUpperCase() + result.classification.archetype.slice(1)} (${confidencePct}% confidence)`);
+  lines.push(result.classification.reasoning);
+  lines.push('');
+
+  // Gameplan (from archetype_info)
+  if (result.archetype_info) {
+    lines.push('## Gameplan');
+    lines.push(result.archetype_info.gameplan);
+    lines.push('');
+
+    lines.push('## Strengths');
+    for (const s of result.archetype_info.strengths) {
+      lines.push(`- ${s}`);
+    }
+    lines.push('');
+
+    lines.push('## Weaknesses');
+    for (const w of result.archetype_info.weaknesses) {
+      lines.push(`- ${w}`);
+    }
+    lines.push('');
+  }
+
+  // Mana Curve
+  lines.push('## Mana Curve');
+  const buckets = ['0', '1', '2', '3', '4', '5', '6', '7+'];
+  for (const bucket of buckets) {
+    const count = result.deck.mana_curve[bucket] ?? 0;
+    if (count > 0) {
+      const bar = '\u2588'.repeat(count);
+      lines.push(`${bucket}: ${bar} ${count}`);
+    }
+  }
+  lines.push('');
+
+  // Matchup Expectations
+  if (result.matchups && result.matchups.length > 0) {
+    lines.push('## Matchup Expectations');
+    for (const m of result.matchups) {
+      lines.push(`- vs ${m.vs_archetype}: ${m.favoured} \u2014 ${m.key_tension}`);
+    }
+    lines.push('');
+  }
+
   return lines.join('\n');
 }
