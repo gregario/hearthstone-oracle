@@ -429,6 +429,57 @@ const GAME_CONCEPTS = [
   },
 ];
 
+// --- Keywords ---
+
+const KEYWORDS = [
+  { name: 'Battlecry', description: 'Does something when you play it from your hand.', related_keywords: JSON.stringify(['Combo']) },
+  { name: 'Deathrattle', description: 'Does something when it dies.', related_keywords: JSON.stringify(['Reborn']) },
+  { name: 'Taunt', description: 'Enemies must attack minions with Taunt.', related_keywords: JSON.stringify(['Divine Shield']) },
+  { name: 'Divine Shield', description: 'The first time a Divine Shield minion takes damage, ignore it.', related_keywords: JSON.stringify(['Taunt']) },
+  { name: 'Charge', description: 'Can attack immediately.', related_keywords: JSON.stringify(['Rush']) },
+  { name: 'Rush', description: 'Can attack minions immediately.', related_keywords: JSON.stringify(['Charge']) },
+  { name: 'Windfury', description: 'Can attack twice each turn.', related_keywords: JSON.stringify(['Mega-Windfury']) },
+  { name: 'Lifesteal', description: 'Damage dealt also heals your hero.', related_keywords: JSON.stringify([]) },
+  { name: 'Poisonous', description: 'Destroy any minion damaged by this.', related_keywords: JSON.stringify([]) },
+  { name: 'Stealth', description: 'Cannot be targeted until it attacks.', related_keywords: JSON.stringify([]) },
+  { name: 'Discover', description: 'Choose one of three cards to add to your hand.', related_keywords: JSON.stringify([]) },
+  { name: 'Reborn', description: 'Returns to life with 1 Health the first time it dies.', related_keywords: JSON.stringify(['Deathrattle']) },
+  { name: 'Outcast', description: 'A bonus if played as the left- or right-most card in your hand.', related_keywords: JSON.stringify([]) },
+  { name: 'Infuse', description: 'Upgrades in hand after friendly minions die.', related_keywords: JSON.stringify([]) },
+  { name: 'Forge', description: 'Pay 2 mana to upgrade this card while in your hand.', related_keywords: JSON.stringify([]) },
+  { name: 'Excavate', description: 'Dig for powerful treasures. Higher tiers unlock as you excavate more.', related_keywords: JSON.stringify([]) },
+  { name: 'Magnetic', description: 'Play this to the left of a Mech to fuse them together.', related_keywords: JSON.stringify([]) },
+  { name: 'Echo', description: 'Can be played multiple times in a turn. Each copy costs the same.', related_keywords: JSON.stringify([]) },
+  { name: 'Spell Damage', description: 'Your spell cards deal extra damage equal to the Spell Damage value.', related_keywords: JSON.stringify([]) },
+  { name: 'Overload', description: 'Locks some of your mana crystals next turn.', related_keywords: JSON.stringify([]) },
+  { name: 'Secret', description: 'A hidden card that activates on your opponent\'s turn when a condition is met.', related_keywords: JSON.stringify([]) },
+  { name: 'Quest', description: 'Starts in your opening hand. Complete the condition for a reward.', related_keywords: JSON.stringify([]) },
+  { name: 'Freeze', description: 'Frozen characters lose their next attack.', related_keywords: JSON.stringify([]) },
+  { name: 'Silence', description: 'Removes all card text and enchantments from a minion.', related_keywords: JSON.stringify([]) },
+  { name: 'Adapt', description: 'Choose one of three bonuses from a set of 10 possible adaptations.', related_keywords: JSON.stringify(['Discover']) },
+  { name: 'Choose One', description: 'Pick one of two effects. A signature Druid mechanic.', related_keywords: JSON.stringify([]) },
+  { name: 'Combo', description: 'A bonus if you already played a card this turn. A Rogue mechanic.', related_keywords: JSON.stringify(['Battlecry']) },
+  { name: 'Inspire', description: 'Does something after you use your Hero Power.', related_keywords: JSON.stringify([]) },
+  { name: 'Recruit', description: 'Summon a minion from your deck.', related_keywords: JSON.stringify([]) },
+  { name: 'Overkill', description: 'Deal excess damage on your turn for a bonus.', related_keywords: JSON.stringify([]) },
+  { name: 'Twinspell', description: 'Can be cast twice. The second copy has no Twinspell.', related_keywords: JSON.stringify(['Echo']) },
+  { name: 'Invoke', description: 'Use Galakrond\'s Power.', related_keywords: JSON.stringify([]) },
+  { name: 'Spellburst', description: 'A one-time effect after you cast a spell.', related_keywords: JSON.stringify([]) },
+  { name: 'Frenzy', description: 'A one-time effect the first time this minion survives damage.', related_keywords: JSON.stringify([]) },
+  { name: 'Tradeable', description: 'Drag this into your deck to spend 1 mana and draw a new card.', related_keywords: JSON.stringify([]) },
+  { name: 'Honorable Kill', description: 'Deal exact lethal damage to a minion for a bonus.', related_keywords: JSON.stringify(['Overkill']) },
+  { name: 'Colossal', description: 'Enters the battlefield with additional appendage minions.', related_keywords: JSON.stringify([]) },
+  { name: 'Dredge', description: 'Look at the bottom 3 cards of your deck. Put one on top.', related_keywords: JSON.stringify([]) },
+  { name: 'Corpse', description: 'A Death Knight resource generated when friendly minions die.', related_keywords: JSON.stringify([]) },
+  { name: 'Manathirst', description: 'A bonus if you have enough mana crystals (not current mana).', related_keywords: JSON.stringify([]) },
+  { name: 'Overheal', description: 'A bonus when healed above full Health.', related_keywords: JSON.stringify(['Lifesteal']) },
+  { name: 'Titan', description: 'On play, choose one of three powerful abilities for three turns.', related_keywords: JSON.stringify([]) },
+  { name: 'Quickdraw', description: 'A bonus if played on the same turn it was drawn.', related_keywords: JSON.stringify([]) },
+  { name: 'Miniaturize', description: 'Add a 1-mana 1/1 copy of this to your hand.', related_keywords: JSON.stringify([]) },
+  { name: 'Starship', description: 'Assemble a Starship by adding Starship Pieces throughout the game.', related_keywords: JSON.stringify([]) },
+  { name: 'Tourist', description: 'Allows deckbuilding with cards from another class.', related_keywords: JSON.stringify([]) },
+];
+
 // --- Seed function ---
 
 export function seedStrategyKnowledge(db: Database.Database): void {
@@ -452,6 +503,11 @@ export function seedStrategyKnowledge(db: Database.Database): void {
     VALUES (@name, @category, @description, @hearthstone_application)
   `);
 
+  const insertKeyword = db.prepare(`
+    INSERT OR REPLACE INTO keywords (name, description, related_keywords)
+    VALUES (@name, @description, @related_keywords)
+  `);
+
   const seedAll = db.transaction(() => {
     for (const archetype of ARCHETYPES) {
       insertArchetype.run(archetype);
@@ -464,6 +520,9 @@ export function seedStrategyKnowledge(db: Database.Database): void {
     }
     for (const concept of GAME_CONCEPTS) {
       insertConcept.run(concept);
+    }
+    for (const keyword of KEYWORDS) {
+      insertKeyword.run(keyword);
     }
   });
 

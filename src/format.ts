@@ -1,3 +1,6 @@
+import type { GetKeywordResult } from './tools/get-keyword.js';
+import type { DecodeDeckResult } from './tools/decode-deck.js';
+
 // --- Types ---
 
 export interface CardSummary {
@@ -127,6 +130,80 @@ export function formatGetCard(result: GetCardResult): string {
   if (card.flavor) {
     lines.push('');
     lines.push(`*${card.flavor}*`);
+  }
+
+  return lines.join('\n');
+}
+
+// --- get_keyword formatter ---
+
+export function formatGetKeyword(result: GetKeywordResult): string {
+  if (!result.found) {
+    let msg = result.message;
+    if (result.suggestions && result.suggestions.length > 0) {
+      msg += '\n\nDid you mean:\n';
+      msg += result.suggestions.map((s) => `- ${s}`).join('\n');
+    }
+    return msg;
+  }
+
+  const lines: string[] = [];
+  lines.push(`# ${result.keyword.name}`);
+  lines.push(result.keyword.description);
+
+  if (result.keyword.related_keywords.length > 0) {
+    lines.push(`Related: ${result.keyword.related_keywords.join(', ')}`);
+  }
+
+  if (result.cards.length > 0) {
+    lines.push('');
+    lines.push(`## Cards with ${result.keyword.name} (${result.cards.length})`);
+    for (const card of result.cards) {
+      lines.push(
+        `- **${card.name}** (${card.mana_cost ?? '?'} mana) — ${card.type ?? 'Unknown'} [${card.player_class ?? 'NEUTRAL'}]`,
+      );
+    }
+  }
+
+  return lines.join('\n');
+}
+
+// --- decode_deck formatter ---
+
+export function formatDecodeDeck(result: DecodeDeckResult): string {
+  if (!result.success) {
+    return result.message;
+  }
+
+  const lines: string[] = [];
+  lines.push(`# Deck: ${result.hero_class} (${result.format})`);
+  lines.push(`Total cards: ${result.total_cards}`);
+  lines.push('');
+
+  // Cards list
+  lines.push('## Cards');
+  for (const { card, count } of result.cards) {
+    lines.push(
+      `- ${count}x **${card.name}** (${card.mana_cost ?? '?'} mana) — ${card.type ?? 'Unknown'}`,
+    );
+  }
+
+  // Mana Curve
+  lines.push('');
+  lines.push('## Mana Curve');
+  const buckets = ['0', '1', '2', '3', '4', '5', '6', '7+'];
+  for (const bucket of buckets) {
+    const count = result.mana_curve[bucket] ?? 0;
+    if (count > 0) {
+      lines.push(`${bucket}: ${'#'.repeat(count)} (${count})`);
+    }
+  }
+
+  // Type Distribution
+  lines.push('');
+  lines.push('## Type Distribution');
+  for (const [type, count] of Object.entries(result.type_distribution)) {
+    lines.push(`- ${type}: ${count}`);
   }
 
   return lines.join('\n');
