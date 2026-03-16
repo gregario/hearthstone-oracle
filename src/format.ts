@@ -1,5 +1,9 @@
 import type { GetKeywordResult } from './tools/get-keyword.js';
 import type { DecodeDeckResult } from './tools/decode-deck.js';
+import type { GetArchetypeResult } from './tools/get-archetype.js';
+import type { GetClassIdentityResult } from './tools/get-class-identity.js';
+import type { GetMatchupResult } from './tools/get-matchup.js';
+import type { ExplainConceptResult } from './tools/explain-concept.js';
 
 // --- Types ---
 
@@ -206,5 +210,161 @@ export function formatDecodeDeck(result: DecodeDeckResult): string {
     lines.push(`- ${type}: ${count}`);
   }
 
+  return lines.join('\n');
+}
+
+// --- get_archetype formatter ---
+
+export function formatGetArchetype(result: GetArchetypeResult): string {
+  if (!result.found) {
+    let msg = result.message;
+    if (result.suggestions && result.suggestions.length > 0) {
+      msg += '\n\nDid you mean:\n';
+      msg += result.suggestions.map((s) => `- ${s}`).join('\n');
+    }
+    return msg;
+  }
+
+  const a = result.archetype;
+  const lines: string[] = [];
+  lines.push(`# ${a.name}`);
+  lines.push('');
+  lines.push(`## Description`);
+  lines.push(a.description);
+  lines.push('');
+  lines.push(`## Gameplan`);
+  lines.push(a.gameplan);
+  lines.push('');
+  lines.push(`## Win Conditions`);
+  for (const wc of a.win_conditions) {
+    lines.push(`- ${wc}`);
+  }
+  lines.push('');
+  lines.push(`## Strengths`);
+  for (const s of a.strengths) {
+    lines.push(`- ${s}`);
+  }
+  lines.push('');
+  lines.push(`## Weaknesses`);
+  for (const w of a.weaknesses) {
+    lines.push(`- ${w}`);
+  }
+  if (a.example_decks.length > 0) {
+    lines.push('');
+    lines.push(`## Example Decks`);
+    for (const ed of a.example_decks) {
+      lines.push(`- ${ed}`);
+    }
+  }
+  return lines.join('\n');
+}
+
+// --- get_class_identity formatter ---
+
+export function formatGetClassIdentity(result: GetClassIdentityResult): string {
+  if (!result.found) {
+    let msg = result.message;
+    if (result.suggestions && result.suggestions.length > 0) {
+      msg += '\n\nDid you mean:\n';
+      msg += result.suggestions.map((s) => `- ${s}`).join('\n');
+    }
+    return msg;
+  }
+
+  if ('overview' in result && result.overview) {
+    const lines: string[] = [];
+    lines.push('# Hearthstone Classes');
+    lines.push('');
+    for (const cls of result.classes) {
+      lines.push(`- **${cls.class}** (${cls.hero_power_name}) — ${cls.identity}`);
+    }
+    return lines.join('\n');
+  }
+
+  const id = result.identity;
+  const lines: string[] = [];
+  lines.push(`# ${id.class}`);
+  lines.push('');
+  lines.push(`## Strategic Identity`);
+  lines.push(id.identity);
+  lines.push('');
+  lines.push(`## Hero Power: ${id.hero_power_name} (${id.hero_power_cost} mana)`);
+  lines.push(id.hero_power_effect);
+  lines.push('');
+  lines.push(`**Implications:** ${id.hero_power_implications}`);
+  lines.push('');
+  lines.push(`## Strengths`);
+  for (const s of id.strengths) {
+    lines.push(`- ${s}`);
+  }
+  lines.push('');
+  lines.push(`## Weaknesses`);
+  for (const w of id.weaknesses) {
+    lines.push(`- ${w}`);
+  }
+  lines.push('');
+  lines.push(`## Game Phases`);
+  lines.push(`**Early Game:** ${id.early_game}`);
+  lines.push(`**Mid Game:** ${id.mid_game}`);
+  lines.push(`**Late Game:** ${id.late_game}`);
+  if (id.historical_archetypes.length > 0) {
+    lines.push('');
+    lines.push(`## Historical Archetypes`);
+    for (const arch of id.historical_archetypes) {
+      lines.push(`- ${arch}`);
+    }
+  }
+  return lines.join('\n');
+}
+
+// --- get_matchup formatter ---
+
+export function formatGetMatchup(result: GetMatchupResult): string {
+  if (!result.found) {
+    let msg = result.message;
+    if (result.suggestions && result.suggestions.length > 0) {
+      msg += '\n\nAvailable archetypes:\n';
+      msg += result.suggestions.map((s) => `- ${s}`).join('\n');
+    }
+    return msg;
+  }
+
+  const m = result.matchup;
+  const lines: string[] = [];
+  lines.push(`## ${m.archetype_a} vs ${m.archetype_b}`);
+  lines.push('');
+  lines.push(`**Favoured:** ${m.favoured}`);
+  lines.push('');
+  lines.push(`**Reasoning:** ${m.reasoning}`);
+  lines.push('');
+  lines.push(`**Key Tension:** ${m.key_tension}`);
+  lines.push('');
+  lines.push(`**${m.archetype_a} should prioritise:** ${m.archetype_a_priority}`);
+  lines.push('');
+  lines.push(`**${m.archetype_b} should prioritise:** ${m.archetype_b_priority}`);
+  return lines.join('\n');
+}
+
+// --- explain_concept formatter ---
+
+export function formatExplainConcept(result: ExplainConceptResult): string {
+  if (!result.found) {
+    let msg = result.message;
+    if (result.suggestions && result.suggestions.length > 0) {
+      msg += '\n\nDid you mean:\n';
+      msg += result.suggestions.map((s) => `- ${s}`).join('\n');
+    }
+    return msg;
+  }
+
+  const c = result.concept;
+  const lines: string[] = [];
+  lines.push(`## ${c.name}`);
+  lines.push('');
+  lines.push(`**Category:** ${c.category}`);
+  lines.push('');
+  lines.push(c.description);
+  lines.push('');
+  lines.push(`**In Hearthstone:** ${c.hearthstone_application}`);
   return lines.join('\n');
 }
