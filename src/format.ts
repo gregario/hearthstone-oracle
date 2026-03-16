@@ -282,7 +282,7 @@ export function formatGetClassIdentity(result: GetClassIdentityResult): string {
     return lines.join('\n');
   }
 
-  const id = result.identity;
+  const id = (result as { found: true; identity: import('./tools/get-class-identity.js').ClassIdentityInfo }).identity;
   const lines: string[] = [];
   lines.push(`# ${id.class}`);
   lines.push('');

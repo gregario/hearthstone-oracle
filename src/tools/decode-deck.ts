@@ -72,7 +72,6 @@ const HERO_CLASS_MAP: Record<number, string> = {
   930: 'ROGUE',     // Valeera Sanguinar
   1066: 'PALADIN',  // Uther Lightbringer
   671: 'WARLOCK',   // Gul'dan
-  274: 'MAGE',      // Jaina
   813: 'SHAMAN',    // Thrall
   893: 'DRUID',     // Malfurion Stormrage
   56550: 'DEMON_HUNTER', // Illidan Stormrage
