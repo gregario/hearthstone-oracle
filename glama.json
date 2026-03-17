@@ -1,0 +1,16 @@
+{
+  "$schema": "https://glama.ai/mcp/schemas/server.json",
+  "maintainers": ["gregario"],
+  "relatedServers": [
+    {
+      "name": "mtg-oracle",
+      "url": "https://glama.ai/mcp/servers/gregario/mtg-oracle",
+      "description": "Magic: The Gathering card search and deck analysis"
+    },
+    {
+      "name": "lorcana-oracle",
+      "url": "https://glama.ai/mcp/servers/gregario/lorcana-oracle",
+      "description": "Disney Lorcana TCG card search and deck analysis"
+    }
+  ]
+}
