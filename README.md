@@ -13,6 +13,8 @@
 
 Hearthstone MCP server with card search, deck analysis, and strategy coaching. Gives LLMs access to every Hearthstone card plus built-in strategy knowledge for deck building and gameplay advice.
 
+[![hearthstone-oracle MCP server](https://glama.ai/mcp/servers/gregario/hearthstone-oracle/badges/card.svg)](https://glama.ai/mcp/servers/gregario/hearthstone-oracle)
+
 ## Features
 
 - **Complete card database** from HearthstoneJSON — every collectible card, auto-updated
