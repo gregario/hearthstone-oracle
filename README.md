@@ -21,6 +21,10 @@ Hearthstone MCP server with card search, deck analysis, and strategy coaching. G
 - **Strategy knowledge** — archetypes, class identities, matchup dynamics, and game concepts
 - **9 MCP tools** — search, lookup, decode, analyze, coach
 
+## Hosted deployment
+
+A hosted deployment is available on [Fronteir AI](https://fronteir.ai/mcp/gregario-hearthstone-oracle).
+
 ## Quick Start
 
 ```bash
