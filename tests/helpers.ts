@@ -7,7 +7,7 @@ import { seedStrategyKnowledge } from '../src/data/strategy-seed.js';
 
 export const RENO_JACKSON: HearthstoneCard = {
   id: 'LOE_011',
-  dbfId: 27228,
+  dbfId: 2883,
   name: 'Reno Jackson',
   cost: 6,
   attack: 4,
@@ -55,7 +55,7 @@ export const FIERY_WAR_AXE: HearthstoneCard = {
 
 export const TIRION: HearthstoneCard = {
   id: 'EX1_383',
-  dbfId: 391,
+  dbfId: 890,
   name: 'Tirion Fordring',
   cost: 8,
   attack: 6,
@@ -72,7 +72,7 @@ export const TIRION: HearthstoneCard = {
 
 export const STONETUSK_BOAR: HearthstoneCard = {
   id: 'CS2_171',
-  dbfId: 604,
+  dbfId: 648,
   name: 'Stonetusk Boar',
   cost: 1,
   attack: 1,

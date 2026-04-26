@@ -129,9 +129,11 @@ export function decodeDeck(
     if (row) {
       cardSummary = toCardSummary(row);
     } else {
-      // Unknown card — create placeholder
+      // Unknown card — create a richer placeholder so the user understands
+      // what happened and how to resolve it. The most common cause is a
+      // recently-released card whose dbfId isn't in the local snapshot yet.
       cardSummary = {
-        name: `Unknown Card (${dbfId})`,
+        name: `Unknown card (dbfId: ${dbfId}) — possibly added in a recent expansion; refresh data to resolve`,
         mana_cost: null,
         type: null,
         player_class: null,

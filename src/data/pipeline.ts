@@ -22,6 +22,30 @@ export interface PipelineOptions {
 const DEFAULT_DATA_DIR = path.join(os.homedir(), '.hearthstone-oracle');
 const LAST_UPDATE_FILENAME = 'last_update.json';
 
+/**
+ * How long a snapshot stays "fresh" before the pipeline auto-refreshes it.
+ * HearthstoneJSON publishes new builds whenever Blizzard ships a card update
+ * (typically every few weeks during a release cycle). One week is a safe
+ * default — frequent enough to pick up new expansions, infrequent enough to
+ * avoid hammering the upstream CDN on every server start.
+ */
+const STALE_AFTER_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+
+/**
+ * Returns true if the cached snapshot is older than STALE_AFTER_MS.
+ * Exported for testing.
+ */
+export function isStale(
+  lastUpdate: LastUpdate,
+  now: Date = new Date(),
+  staleAfterMs: number = STALE_AFTER_MS,
+): boolean {
+  if (!lastUpdate.hearthstone) return true;
+  const last = new Date(lastUpdate.hearthstone).getTime();
+  if (Number.isNaN(last)) return true;
+  return now.getTime() - last > staleAfterMs;
+}
+
 // --- Last update management ---
 
 /**
@@ -88,9 +112,12 @@ export async function runPipeline(
 
   const lastUpdate = loadLastUpdate(dataDir);
   const existingData = hasExistingData(db);
+  const stale = isStale(lastUpdate);
 
-  // If we have data and not forced, skip fetch
-  if (existingData && !force && !isFirstRun(lastUpdate)) {
+  // If we have fresh data and not forced, skip fetch.
+  // Stale data triggers a refresh so newer expansions are picked up
+  // (avoids "Unknown Card" results in decode_deck for recent dbfIds).
+  if (existingData && !force && !isFirstRun(lastUpdate) && !stale) {
     const row = db.prepare('SELECT COUNT(*) as cnt FROM cards').get() as {
       cnt: number;
     };
@@ -98,6 +125,15 @@ export async function runPipeline(
       `Skipping fetch — ${row.cnt} cards already loaded (last update: ${lastUpdate.hearthstone})`
     );
     return row.cnt;
+  }
+
+  if (existingData && stale && !force) {
+    const ageDescription = lastUpdate.hearthstone
+      ? `last update: ${lastUpdate.hearthstone}`
+      : 'no last_update.json found';
+    console.error(
+      `Cached snapshot is stale (${ageDescription}); refreshing from HearthstoneJSON...`,
+    );
   }
 
   try {

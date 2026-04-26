@@ -1,7 +1,7 @@
 {
-  "version": "0.1.0",
+  "version": "0.1.1",
   "tools_count": 9,
-  "tests_count": 111,
+  "tests_count": 117,
   "npm": { "published": true, "version": "0.1.0" },
   "glama": { "listed": true, "score_badge": true, "ownership_claimed": true },
   "mcp_registry": { "registered": true, "mcp_name": "io.github.gregario/hearthstone-oracle" },

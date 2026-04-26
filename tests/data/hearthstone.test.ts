@@ -11,7 +11,7 @@ import {
 
 const RENO_JACKSON: HearthstoneCard = {
   id: 'LOE_011',
-  dbfId: 27228,
+  dbfId: 2883,
   name: 'Reno Jackson',
   cost: 6,
   attack: 4,
@@ -48,7 +48,7 @@ describe('transformCard', () => {
   it('correctly maps all fields for a minion', () => {
     const row = transformCard(RENO_JACKSON);
 
-    expect(row.id).toBe('27228');
+    expect(row.id).toBe('2883');
     expect(row.card_id).toBe('LOE_011');
     expect(row.name).toBe('Reno Jackson');
     expect(row.mana_cost).toBe(6);
@@ -145,7 +145,7 @@ describe('ingestCards', () => {
 
     const reno = db
       .prepare('SELECT * FROM cards WHERE id = ?')
-      .get('27228') as CardRow;
+      .get('2883') as CardRow;
     expect(reno.name).toBe('Reno Jackson');
     expect(reno.mana_cost).toBe(6);
 
