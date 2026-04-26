@@ -17,14 +17,14 @@ describe('decode_deck', () => {
   });
 
   // Build a test deck code from known fixture cards
-  // Reno (dbfId 27228) x1, Fireball (315) x2, Boar (604) x2
+  // Reno (dbfId 2883) x1, Fireball (315) x2, Boar (648) x2
   // Hero: Jaina Proudmoore (dbfId 274) — we won't have her in DB, but that's fine
   function makeTestDeckCode(): string {
     return encode({
       cards: [
-        [27228, 1], // Reno Jackson x1
-        [315, 2],   // Fireball x2
-        [604, 2],   // Stonetusk Boar x2
+        [2883, 1], // Reno Jackson x1
+        [315, 2],  // Fireball x2
+        [648, 2],  // Stonetusk Boar x2
       ],
       heroes: [274], // Mage hero dbfId
       format: 2,     // Standard
@@ -151,8 +151,8 @@ describe('decode_deck', () => {
     // Tirion is 8 mana, Reno is 6 mana
     const code = encode({
       cards: [
-        [391, 1],   // Tirion (8 mana)
-        [27228, 1], // Reno (6 mana)
+        [890, 1],  // Tirion (8 mana)
+        [2883, 1], // Reno (6 mana)
       ],
       heroes: [274],
       format: 2,

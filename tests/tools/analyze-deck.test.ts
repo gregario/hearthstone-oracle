@@ -20,7 +20,7 @@ describe('analyze_deck', () => {
   function makeAggroDeckCode(): string {
     return encode({
       cards: [
-        [604, 2],   // Stonetusk Boar x2 (1 mana, Charge)
+        [648, 2],   // Stonetusk Boar x2 (1 mana, Charge)
         [315, 2],   // Fireball x2 (4 mana, deal 6 damage)
         [401, 2],   // Fiery War Axe x2 (3 mana, weapon)
       ],
@@ -33,8 +33,8 @@ describe('analyze_deck', () => {
   function makeControlDeckCode(): string {
     return encode({
       cards: [
-        [391, 1],   // Tirion Fordring x1 (8 mana)
-        [27228, 1], // Reno Jackson x1 (6 mana, heal)
+        [890, 1],  // Tirion Fordring x1 (8 mana)
+        [2883, 1], // Reno Jackson x1 (6 mana, heal)
       ],
       heroes: [274], // Mage
       format: 2,
@@ -109,7 +109,7 @@ describe('analyze_deck', () => {
     const code = encode({
       cards: [
         [999999, 2], // Unknown card
-        [604, 2],    // Stonetusk Boar (known)
+        [648, 2],    // Stonetusk Boar (known)
       ],
       heroes: [274],
       format: 2,
