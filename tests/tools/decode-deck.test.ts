@@ -107,6 +107,31 @@ describe('decode_deck', () => {
     }
   });
 
+  // Unknown card placeholder explains the likely cause and remediation
+  it('returns a richer placeholder message for unknown dbfIds', () => {
+    const code = encode({
+      cards: [
+        [999999, 1], // Unknown — simulates a dbfId from a future expansion
+      ],
+      heroes: [274],
+      format: 2,
+    });
+    const result = decodeDeck(db, { deck_code: code });
+    expect(result.success).toBe(true);
+    if (result.success) {
+      const unknown = result.cards[0]!.card;
+      // Must include the dbfId so the user can look it up
+      expect(unknown.name).toContain('999999');
+      // Must explain the likely cause (recent expansion)
+      expect(unknown.name.toLowerCase()).toContain('recent expansion');
+      // Must point at the remediation
+      expect(unknown.name.toLowerCase()).toContain('refresh data');
+      // Other fields stay null (we don't have the data)
+      expect(unknown.mana_cost).toBeNull();
+      expect(unknown.type).toBeNull();
+    }
+  });
+
   // Wild format
   it('identifies Wild format', () => {
     const code = encode({
