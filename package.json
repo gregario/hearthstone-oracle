@@ -1,7 +1,7 @@
 {
   "name": "hearthstone-oracle",
   "packageManager": "npm@11.11.0",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Hearthstone MCP server with card search, deck analysis, and strategy coaching",
   "type": "module",
   "license": "MIT",
