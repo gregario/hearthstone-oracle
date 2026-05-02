@@ -2,10 +2,10 @@
   "version": "0.1.1",
   "tools_count": 9,
   "tests_count": 117,
-  "npm": { "published": true, "version": "0.1.0" },
+  "npm": { "published": true, "version": "0.1.1" },
   "glama": { "listed": true, "score_badge": true, "ownership_claimed": true },
   "mcp_registry": { "registered": true, "mcp_name": "io.github.gregario/hearthstone-oracle" },
   "awesome_mcp_servers": { "pr_submitted": true, "pr_url": "https://github.com/punkpeye/awesome-mcp-servers/pull/3359" },
-  "github": { "release_tag": "v0.1.0", "sponsor_enabled": false },
-  "ci": { "oidc_publishing": false, "workflow": null }
+  "github": { "release_tag": "v0.1.1", "sponsor_enabled": false },
+  "ci": { "oidc_publishing": false, "workflow": "ci.yml" }
 }
